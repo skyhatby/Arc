@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Globalization;
+using Infrastructure.Helpers;
 
-namespace Entities
+namespace Entities.Entities.Membership
 {
-    public class User
+    public class User : Entity<Guid>
     {
         private string _password;
 
@@ -26,14 +26,15 @@ namespace Entities
             Password = pass;
         }
 
-        public Guid Id { get; private set; }
+        
         public string UserName { get; set; }
 
         public string Password
         {
             get { return _password; }
-            set { _password = (value + PasswordSault).GetHashCode().ToString(CultureInfo.InvariantCulture); }
+            set { _password = UsersHelper.GetHash(value, PasswordSault); }
         }
+
         public string PasswordSault { get; private set; }
 
         public string RoleName { get; set; }

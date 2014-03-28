@@ -3,7 +3,9 @@ using System.Data;
 using System.Data.Entity.Infrastructure;
 using System.Globalization;
 using Entities;
+using Entities.Entities.Membership;
 using Repositories;
+using Repositories.Repositories.Membership;
 
 namespace Client
 {
@@ -14,9 +16,11 @@ namespace Client
             Tuple<bool, string> auth = null;
             while (true)
             {
+                var ur = new UserRepo();
+                var rr = new RoleRepo();
                 int i;
                 Console.WriteLine();
-                if (auth!=null)Console.WriteLine("Hi "+auth.Item2);
+                if (auth != null) Console.WriteLine("Hi " + auth.Item2);
                 Console.WriteLine("Enter 0 to authorize");
                 Console.WriteLine("Enter 1 to create user");
                 Console.WriteLine("Enter 2 to create role");
@@ -24,7 +28,7 @@ namespace Client
                 Console.WriteLine("Enter 4 to view all roles");
                 Console.WriteLine("Enter 5 to Set User In Role");
                 Console.WriteLine("Enter 6 to Delete User");
-                Console.WriteLine("Enter 7 to Delete Role"+Environment.NewLine+"Or nothing to exit");
+                Console.WriteLine("Enter 7 to Delete Role" + Environment.NewLine + "Or nothing to exit");
                 try
                 {
                     i = Convert.ToInt32(Console.ReadLine());
@@ -38,11 +42,10 @@ namespace Client
                 {
                     case 0:
                         Console.Write("Enter User Name: ");
-                        var user = UserRepo.FindUserByName(Console.ReadLine());
+                        var user = ur.Find(Console.ReadLine());
                         Console.Write("Enter User Password: ");
                         if (user.Password ==
-                            (Console.ReadLine() + user.PasswordSault).GetHashCode()
-                                .ToString(CultureInfo.InvariantCulture))
+                            (Console.ReadLine() + Infrastructure.Helpers.UsersHelper.GetHash("asd",user.PasswordSault)))
                         {
                             auth = new Tuple<bool, string>(true, user.UserName);
                             Console.WriteLine("You have been authorized!");
@@ -95,7 +98,8 @@ namespace Client
             Console.WriteLine("Enter User name to delete");
             try
             {
-                UserRepo.DeleteUserByName(Console.ReadLine());
+                var ur = new UserRepo();
+                ur.DeleteUserByName(Console.ReadLine());
             }
             catch (DbUpdateException ex)
             {
@@ -107,7 +111,7 @@ namespace Client
 
         private static void ViewAllRoles()
         {
-            foreach (var roles in RoleRepo.GetAllRoles())
+            foreach (var roles in RoleRepo.GetAll())
             {
                 Console.Write("Role " + roles + Environment.NewLine);
             }
@@ -121,7 +125,8 @@ namespace Client
             var roleName = Console.ReadLine();
             try
             {
-                UserRepo.SetUserInRole(userName, roleName);
+                var ur = new UserRepo();
+                ur.SetUserInRole(userName, roleName);
             }
             catch (NoNullAllowedException ex)
             {
@@ -135,7 +140,8 @@ namespace Client
 
         private static void ViewAllUsers()
         {
-            foreach (var allUser in UserRepo.GetAllUsers())
+            var ur = new UserRepo();
+            foreach (var allUser in ur.GetAll())
             {
                 Console.Write(allUser);
             }
@@ -147,7 +153,7 @@ namespace Client
             var role = new Roles(Console.ReadLine());
             try
             {
-                RoleRepo.CreateRole(role);
+                RoleRepo.Create(role);
             }
             catch (DbUpdateException)
             {
@@ -160,24 +166,20 @@ namespace Client
         private static void CreateUser()
         {
             var user = new User();
-            Console.Write("Enter User Name: ");
             user.UserName = Console.ReadLine();
-            Console.Write("Enter User Password: ");
             user.Password = Console.ReadLine();
             try
             {
-                UserRepo.CreateUser(user);
+                var ur = new UserRepo();
+                ur.Create(user);
             }
             catch (NoNullAllowedException ex)
             {
-                Console.WriteLine(ex.Message);
             }
             catch (DbUpdateException ex)
             {
-                Console.WriteLine(ex.Message);
                 return;
             }
-            Console.WriteLine("You have created user {0}", user.UserName);
         }
     }
 }

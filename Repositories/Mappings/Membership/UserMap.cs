@@ -1,5 +1,5 @@
 ﻿using System.Data.Entity.ModelConfiguration;
-using Entities;
+using Entities.Entities.Membership;
 
 namespace Repositories
 {

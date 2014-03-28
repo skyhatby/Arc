@@ -39,10 +39,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\Entity`1.cs" />
+    <Compile Include="IRepoFactory.cs" />
+    <Compile Include="IUnitOfWork.cs" />
+    <Compile Include="Repositories\IRepo.cs" />
+    <Compile Include="Repositories\IRepo`1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Roles.cs" />
-    <Compile Include="User.cs" />
-    <Compile Include="UsersHelper.cs" />
+    <Compile Include="Entities\Membership\Roles.cs" />
+    <Compile Include="Entities\Membership\User.cs" />
+    <Compile Include="Repositories\Membership\IRoleRepo.cs" />
+    <Compile Include="Repositories\Membership\IUserRepo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
+      <Project>{d1846993-07ba-4f23-a030-535aed3304d8}</Project>
+      <Name>Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

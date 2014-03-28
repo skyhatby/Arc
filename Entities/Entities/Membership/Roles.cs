@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Entities
+namespace Entities.Entities.Membership
 {
-    public class Roles
+    public class Roles : Entity
     {
         private ICollection<User> _users;
 
